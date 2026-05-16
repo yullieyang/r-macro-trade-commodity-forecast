@@ -204,6 +204,23 @@ illustrates the same pipeline handling structurally different targets.
 - Add unit tests for the transform helpers (`testthat`) and lint with
   `lintr` / `styler` in CI.
 
+## Development & AI workflow
+
+This pipeline was built with **[Claude Code](https://claude.com/claude-code)** as a pair-programming and review collaborator. Concretely, Claude Code was used to:
+
+- Scaffold the modular `R/` helper layer and the numbered `scripts/` pipeline,
+  then iteratively refactor as the design solidified.
+- Co-author the methodology and data-dictionary documents in `docs/`.
+- Review diffs for naming consistency, `here::here()` path discipline, and
+  removal of hard-coded values before commit.
+- Generate this README and the inline-figure section so the repo renders as a
+  short technical brief on its GitHub landing page.
+
+The intent mirrors what a production research-support workflow looks like:
+human-authored economic and modeling decisions, with an LLM collaborator
+handling boilerplate, style enforcement, and documentation. Prompt history
+and key conversations can be reproduced from `CLAUDE.md` (added on request).
+
 ## Resume bullet
 
 > Built **r-macro-trade-commodity-forecast**, a modular R pipeline that
