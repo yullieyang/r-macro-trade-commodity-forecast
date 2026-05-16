@@ -57,10 +57,12 @@ place without touching the rest of the pipeline.
 3. **Explore** — `03_exploratory_analysis.R` produces descriptive summaries,
    a multi-panel time-series chart, a net-exports trend chart, and a
    correlation heatmap between oil, trade, and macro variables.
-4. **Forecast** — `04_forecast_model.R` fits an ARIMA model (auto-selected by
-   `forecast::auto.arima`) to real net exports, generates an 8-quarter
-   forecast with 80% / 95% prediction intervals, and saves a tidy model
-   summary.
+4. **Forecast** — `04_forecast_model.R` loops over a configurable target
+   list (currently `NetExports` and `RealGDP`), fits an ARIMA model
+   auto-selected by `forecast::auto.arima` for each, generates an
+   8-quarter forecast with 80% / 95% prediction intervals, and writes
+   combined model-summary and forecast-results tables (one row per
+   target × term) plus one figure per target.
 5. **Generate outputs** — `05_generate_outputs.R` is the entry point that
    sources the full pipeline so a reviewer can reproduce every artifact with
    a single command.
@@ -131,20 +133,49 @@ and tables. Each stage can also be run independently for debugging.
 
 ## Key outputs
 
+Data and tables:
+
 - `data/processed/cleaned_macro_trade_data.csv` — analysis-ready quarterly
   panel with raw levels and derived measures.
-- `outputs/tables/model_summary.csv` — tidy ARIMA coefficients with standard
-  errors and p-values.
+- `outputs/tables/model_summary.csv` — tidy ARIMA coefficients (with
+  standard errors and p-values) and fit diagnostics for every target,
+  stacked with a `target` column.
 - `outputs/tables/forecast_results.csv` — point forecasts and 80% / 95%
-  intervals for the next 8 quarters.
-- `outputs/figures/01_macro_trade_overview.png` — multi-panel chart of key
-  indicators.
-- `outputs/figures/02_net_exports_trend.png` — net exports with recession
-  context.
-- `outputs/figures/03_correlation_heatmap.png` — correlation matrix of
-  oil, trade, and macro variables.
-- `outputs/figures/04_forecast_net_exports.png` — net-exports forecast with
-  shaded prediction intervals.
+  intervals for the next 8 quarters, per target.
+- `outputs/tables/descriptive_summary.csv` — per-series n / range / mean
+  / sd reference.
+
+Figures (rendered below from `outputs/figures/`):
+
+### Macro, trade, and commodity overview
+
+![Macro / trade / commodity overview](outputs/figures/01_macro_trade_overview.png)
+
+### Net exports trend
+
+![Net exports trend](outputs/figures/02_net_exports_trend.png)
+
+### Co-movement of oil, trade, and macro variables
+
+![Correlation heatmap](outputs/figures/03_correlation_heatmap.png)
+
+### 8-quarter ARIMA forecast — net exports
+
+`auto.arima` selected **ARIMA(0,1,0)** for net exports — i.e. a random
+walk without drift. This is a defensible baseline (US net exports are
+close to a random walk at quarterly frequency) and the chart shows the
+flat point forecast with fanning prediction bands.
+
+![Net exports forecast](outputs/figures/04_forecast_net_exports.png)
+
+### 8-quarter ARIMA forecast — real GDP
+
+`auto.arima` selected **ARIMA(0,1,1) with drift** for real GDP — an MA(1)
+on first differences plus a positive drift term capturing trend growth.
+This is a richer specification than the net-exports baseline and
+illustrates the same pipeline handling structurally different targets.
+
+![Real GDP forecast](outputs/figures/05_forecast_real_gdp.png)
 
 ## Limitations
 
