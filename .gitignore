@@ -1,0 +1,26 @@
+# R session / user state
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Local environment with secrets (FRED_API_KEY etc.)
+.Renviron
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Data snapshots — keep the directories (via .gitkeep) but not the bytes.
+# Reviewers regenerate these with `source(scripts/05_generate_outputs.R)`.
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Generated outputs — same policy.
+outputs/figures/*
+outputs/tables/*
+!outputs/figures/.gitkeep
+!outputs/tables/.gitkeep

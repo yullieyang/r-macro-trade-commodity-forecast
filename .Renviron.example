@@ -1,0 +1,9 @@
+# Copy this file to .Renviron in the project root and replace the
+# placeholder below with your personal FRED API key.
+#
+# Get a free key here: https://fred.stlouisfed.org/docs/api/api_key.html
+#
+# R will source .Renviron automatically at session start, so no further
+# wiring is needed — `Sys.getenv("FRED_API_KEY")` will return the value.
+
+FRED_API_KEY=your_fred_api_key_here
