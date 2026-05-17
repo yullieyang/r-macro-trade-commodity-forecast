@@ -1,0 +1,93 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "",
+    "text": "Note\n\n\n\nThis dashboard is auto-rendered from the repository on every push to main via a GitHub Actions workflow. All figures and tables shown below are the exact artifacts checked into the repo under outputs/."
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Overview",
+    "text": "Overview\nThirteen FRED series — WTI crude oil, natural gas, copper, nominal and real exports/imports, real GDP, unemployment, the effective federal funds rate, CPI, industrial production, and the broad trade-weighted U.S. dollar index — are pulled, harmonized to a common quarterly grid (period-average aggregation), and combined into a wide analysis panel with derived measures: net exports (nominal and real), trade balance ratio, implicit import and export deflators, terms of trade, YoY / QoQ growth on every level series, and log / quarterly-change of WTI.\nThe same pipeline then:\n\nfits forecast::auto.arima() to three structurally different target series — net exports, real GDP, and WTI crude oil — and produces an 8-quarter forecast with 80% / 95% prediction intervals for each, and\nestimates a distributed-lag exchange-rate pass-through regression of Δlog(import / export deflator) on Δlog(broad USD) with 0–4 quarter lags and a CPI control, reporting the cumulative pass-through coefficient."
+  },
+  {
+    "objectID": "index.html#indicator-overview",
+    "href": "index.html#indicator-overview",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Indicator overview",
+    "text": "Indicator overview"
+  },
+  {
+    "objectID": "index.html#net-exports",
+    "href": "index.html#net-exports",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Net exports",
+    "text": "Net exports"
+  },
+  {
+    "objectID": "index.html#co-movement",
+    "href": "index.html#co-movement",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Co-movement",
+    "text": "Co-movement"
+  },
+  {
+    "objectID": "index.html#exchange-rate-pass-through-to-u.s.-import-prices",
+    "href": "index.html#exchange-rate-pass-through-to-u.s.-import-prices",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Exchange-rate pass-through to U.S. import prices",
+    "text": "Exchange-rate pass-through to U.S. import prices\n\nCumulative 5-quarter pass-through coefficients (Σ β₀..β₄) from the distributed-lag regression:\n\n\n\n\n\nTrade-price series\nCumulative pass-through (Σ β)\nn (quarters)\n\n\n\n\nImportDeflator\n-0.670\n76\n\n\nExportDeflator\n-0.457\n76\n\n\n\n\n\nA negative coefficient indicates a dollar appreciation passes through to lower U.S. import / export prices, as expected. Magnitudes well below one in absolute value reflect the well-documented incomplete pass-through characteristic of U.S. trade prices."
+  },
+  {
+    "objectID": "index.html#forecasts-8-quarters-80-95-prediction-intervals",
+    "href": "index.html#forecasts-8-quarters-80-95-prediction-intervals",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Forecasts (8 quarters, 80% / 95% prediction intervals)",
+    "text": "Forecasts (8 quarters, 80% / 95% prediction intervals)\n\nNet exportsReal GDPWTI crude oil\n\n\n\nSelected model: ARIMA(0,1,0) — a random-walk baseline. The flat point forecast and fanning intervals are an honest acknowledgment that quarterly U.S. net exports are close to a random walk and a univariate ARIMA has little signal to extract.\n\n\n\nSelected model: ARIMA(0,1,1) with drift. The positive drift term captures trend growth; the MA(1) on first differences absorbs short-horizon noise.\n\n\n\nSelected model: ARIMA(1,1,2). AR(1) coefficient ≈ 0.66 implies moderate persistence of quarterly shocks; the two MA terms absorb noise. The fan widens quickly — reflecting the well-known difficulty of multi-quarter commodity-price forecasting."
+  },
+  {
+    "objectID": "index.html#forecast-results",
+    "href": "index.html#forecast-results",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Forecast results",
+    "text": "Forecast results\n\n\n\nPoint forecast and 80% / 95% prediction intervals, 8-quarter horizon, per target.\n\n\n\n\n\n\n\n\n\n\n\nTarget\nDate\nPoint\nLower 80\nUpper 80\nLower 95\nUpper 95\n\n\n\n\nNetExports\n2026-04-01\n-892.43\n-970.45\n-814.42\n-1011.74\n-773.12\n\n\nNetExports\n2026-07-01\n-892.43\n-1002.76\n-782.10\n-1061.16\n-723.70\n\n\nNetExports\n2026-10-01\n-892.43\n-1027.55\n-757.31\n-1099.08\n-685.78\n\n\nNetExports\n2027-01-01\n-892.43\n-1048.46\n-736.41\n-1131.05\n-653.81\n\n\nNetExports\n2027-04-01\n-892.43\n-1066.87\n-717.99\n-1159.22\n-625.64\n\n\nNetExports\n2027-07-01\n-892.43\n-1083.52\n-701.34\n-1184.68\n-600.18\n\n\nNetExports\n2027-10-01\n-892.43\n-1098.84\n-686.03\n-1208.10\n-576.76\n\n\nNetExports\n2028-01-01\n-892.43\n-1113.09\n-671.78\n-1229.89\n-554.97\n\n\nRealGDP\n2026-04-01\n24269.90\n24004.47\n24535.34\n23863.95\n24675.85\n\n\nRealGDP\n2026-07-01\n24368.12\n24029.04\n24707.19\n23849.54\n24886.69\n\n\nRealGDP\n2026-10-01\n24466.33\n24066.97\n24865.69\n23855.56\n25077.10\n\n\nRealGDP\n2027-01-01\n24564.54\n24112.87\n25016.21\n23873.77\n25255.31\n\n\nRealGDP\n2027-04-01\n24662.75\n24164.23\n25161.27\n23900.33\n25425.17\n\n\nRealGDP\n2027-07-01\n24760.97\n24219.63\n25302.30\n23933.07\n25588.86\n\n\nRealGDP\n2027-10-01\n24859.18\n24278.18\n25440.17\n23970.62\n25747.73\n\n\nRealGDP\n2028-01-01\n24957.39\n24339.27\n25575.51\n24012.06\n25902.72\n\n\nOilWTI\n2026-04-01\n78.43\n67.57\n89.28\n61.83\n95.02\n\n\nOilWTI\n2026-07-01\n77.02\n59.82\n94.23\n50.71\n103.34\n\n\nOilWTI\n2026-10-01\n76.10\n55.63\n96.57\n44.79\n107.41\n\n\nOilWTI\n2027-01-01\n75.49\n52.87\n98.10\n40.90\n110.08\n\n\nOilWTI\n2027-04-01\n75.09\n50.88\n99.29\n38.07\n112.10\n\n\nOilWTI\n2027-07-01\n74.82\n49.33\n100.31\n35.84\n113.80\n\n\nOilWTI\n2027-10-01\n74.64\n48.06\n101.23\n33.99\n115.30\n\n\nOilWTI\n2028-01-01\n74.53\n46.97\n102.09\n32.38\n116.68"
+  },
+  {
+    "objectID": "index.html#model-summary",
+    "href": "index.html#model-summary",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Model summary",
+    "text": "Model summary\n\n\n\nARIMA coefficient estimates and fit diagnostics for each target.\n\n\n\n\n\n\n\n\n\n\n\nTarget\nModel\nTerm\nEstimate\nStd. error\nz\np-value\n\n\n\n\nNetExports\nARIMA(0,1,0)\naic\n1594.0000\nNA\nNA\nNA\n\n\nNetExports\nARIMA(0,1,0)\nbic\n1597.0000\nNA\nNA\nNA\n\n\nNetExports\nARIMA(0,1,0)\nsigma_sq\n3706.0000\nNA\nNA\nNA\n\n\nNetExports\nARIMA(0,1,0)\nlog_likelihood\n-796.0000\nNA\nNA\nNA\n\n\nNetExports\nARIMA(0,1,0)\nn_obs\n144.0000\nNA\nNA\nNA\n\n\nRealGDP\nARIMA(0,1,1) with drift\nma1\n-0.2051\n0.08697\n-2.359\n0.0183400\n\n\nRealGDP\nARIMA(0,1,1) with drift\ndrift\n98.2100\n13.65000\n7.196\n0.0000000\n\n\nRealGDP\nARIMA(0,1,1) with drift\naic\n1949.0000\nNA\nNA\nNA\n\n\nRealGDP\nARIMA(0,1,1) with drift\nbic\n1958.0000\nNA\nNA\nNA\n\n\nRealGDP\nARIMA(0,1,1) with drift\nsigma_sq\n42900.0000\nNA\nNA\nNA\n\n\nRealGDP\nARIMA(0,1,1) with drift\nlog_likelihood\n-971.3000\nNA\nNA\nNA\n\n\nRealGDP\nARIMA(0,1,1) with drift\nn_obs\n144.0000\nNA\nNA\nNA\n\n\nOilWTI\nARIMA(1,1,2)\nar1\n0.6598\n0.15800\n4.175\n0.0000298\n\n\nOilWTI\nARIMA(1,1,2)\nma1\n-0.4297\n0.15590\n-2.756\n0.0058520\n\n\nOilWTI\nARIMA(1,1,2)\nma2\n-0.3596\n0.07688\n-4.677\n0.0000029\n\n\nOilWTI\nARIMA(1,1,2)\naic\n1029.0000\nNA\nNA\nNA\n\n\nOilWTI\nARIMA(1,1,2)\nbic\n1041.0000\nNA\nNA\nNA\n\n\nOilWTI\nARIMA(1,1,2)\nsigma_sq\n71.7200\nNA\nNA\nNA\n\n\nOilWTI\nARIMA(1,1,2)\nlog_likelihood\n-510.6000\nNA\nNA\nNA\n\n\nOilWTI\nARIMA(1,1,2)\nn_obs\n144.0000\nNA\nNA\nNA"
+  },
+  {
+    "objectID": "index.html#pass-through-regression-full-coefficients",
+    "href": "index.html#pass-through-regression-full-coefficients",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Pass-through regression — full coefficients",
+    "text": "Pass-through regression — full coefficients\n\n\n\nDistributed-lag regression of Δlog(trade deflator) on Δlog(broad USD) with 0..4 quarter lags and Δlog(CPI) as a control. is_fx flags the dollar-lag terms whose coefficients sum to the cumulative pass-through.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntarget\ncumulative_passthrough\nn_obs\nterm\nestimate\nstd.error\nstatistic\np.value\nconf.low\nconf.high\nis_fx\n\n\n\n\nImportDeflator\n-0.6700\n76\n(Intercept)\n-0.008875\n0.001820\n-4.87700\n0.0000067\n-0.012500\n-0.005244\nFALSE\n\n\nImportDeflator\n-0.6700\n76\ndlog_fx\n-0.286800\n0.053590\n-5.35100\n0.0000011\n-0.393700\n-0.179900\nTRUE\n\n\nImportDeflator\n-0.6700\n76\ndlog_fx_lag1\n-0.257700\n0.052410\n-4.91800\n0.0000057\n-0.362300\n-0.153200\nTRUE\n\n\nImportDeflator\n-0.6700\n76\ndlog_fx_lag2\n-0.065710\n0.053020\n-1.23900\n0.2194000\n-0.171500\n0.040060\nTRUE\n\n\nImportDeflator\n-0.6700\n76\ndlog_fx_lag3\n-0.063390\n0.052120\n-1.21600\n0.2281000\n-0.167400\n0.040590\nTRUE\n\n\nImportDeflator\n-0.6700\n76\ndlog_fx_lag4\n0.003558\n0.049670\n0.07164\n0.9431000\n-0.095520\n0.102600\nTRUE\n\n\nImportDeflator\n-0.6700\n76\ndlog_cpi\n2.058000\n0.202800\n10.15000\n0.0000000\n1.653000\n2.462000\nFALSE\n\n\nExportDeflator\n-0.4568\n76\n(Intercept)\n-0.005436\n0.001682\n-3.23100\n0.0018920\n-0.008792\n-0.002079\nFALSE\n\n\nExportDeflator\n-0.4568\n76\ndlog_fx\n-0.159300\n0.049540\n-3.21500\n0.0019830\n-0.258100\n-0.060470\nTRUE\n\n\nExportDeflator\n-0.4568\n76\ndlog_fx_lag1\n-0.119100\n0.048460\n-2.45900\n0.0164600\n-0.215800\n-0.022460\nTRUE\n\n\nExportDeflator\n-0.4568\n76\ndlog_fx_lag2\n-0.081860\n0.049020\n-1.67000\n0.0994700\n-0.179600\n0.015930\nTRUE\n\n\nExportDeflator\n-0.4568\n76\ndlog_fx_lag3\n-0.043960\n0.048190\n-0.91220\n0.3648000\n-0.140100\n0.052180\nTRUE\n\n\nExportDeflator\n-0.4568\n76\ndlog_fx_lag4\n-0.052520\n0.045920\n-1.14400\n0.2566000\n-0.144100\n0.039080\nTRUE\n\n\nExportDeflator\n-0.4568\n76\ndlog_cpi\n1.728000\n0.187500\n9.21800\n0.0000000\n1.354000\n2.102000\nFALSE"
+  },
+  {
+    "objectID": "index.html#descriptive-summary",
+    "href": "index.html#descriptive-summary",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Descriptive summary",
+    "text": "Descriptive summary\n\n\n\nPer-series summary statistics on the cleaned quarterly panel.\n\n\n\n\n\n\n\n\n\n\n\n\n\nlabel\nn_obs\nstart\nend\nmean\nsd\nmin\nmedian\nmax\n\n\n\n\nCPI\n146\n1990-01-01\n2026-04-01\n211.900\n53.390\n128.000\n212.600\n332.40\n\n\nCopperGlobal\n137\n1992-01-01\n2026-01-01\n5232.000\n2894.000\n1408.000\n5668.000\n12820.00\n\n\nExports\n145\n1990-01-01\n2026-01-01\n1710.000\n839.700\n538.200\n1623.000\n3524.00\n\n\nFedFunds\n146\n1990-01-01\n2026-04-01\n2.890\n2.330\n0.060\n2.967\n8.25\n\n\nImports\n145\n1990-01-01\n2026-01-01\n2191.000\n1079.000\n613.900\n2299.000\n4558.00\n\n\nIndustrialProduction\n146\n1990-01-01\n2026-04-01\n90.490\n12.890\n60.720\n95.340\n104.00\n\n\nNatGasHH\n118\n1997-01-01\n2026-04-01\n4.091\n2.042\n1.705\n3.445\n12.21\n\n\nOilWTI\n146\n1990-01-01\n2026-04-01\n52.000\n28.950\n12.930\n48.810\n123.80\n\n\nRealExports\n145\n1990-01-01\n2026-01-01\n1708.000\n638.000\n654.400\n1715.000\n2769.00\n\n\nRealGDP\n145\n1990-01-01\n2026-01-01\n16430.000\n3995.000\n9952.000\n16560.000\n24170.00\n\n\nRealImports\n145\n1990-01-01\n2026-01-01\n2172.000\n896.000\n686.900\n2312.000\n4040.00\n\n\nUSDIndex\n82\n2006-01-01\n2026-04-01\n106.400\n12.330\n86.810\n110.300\n127.60\n\n\nUnemployment\n146\n1990-01-01\n2026-04-01\n5.656\n1.729\n3.533\n5.317\n13.00"
+  },
+  {
+    "objectID": "index.html#methodology-highlights",
+    "href": "index.html#methodology-highlights",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Methodology highlights",
+    "text": "Methodology highlights\n\nFrequency alignment. Daily and monthly series are aggregated to quarterly period averages; quarterly series pass through with their date normalized to quarter-start.\nDerived measures. Nominal and real net exports, trade balance ratio, implicit import / export deflators, terms of trade, YoY / QoQ growth on every level series, and log / quarterly-change transforms for WTI.\nForecast configuration. auto.arima() with seasonal = TRUE, stepwise = FALSE, approximation = FALSE — i.e. the full model-space search rather than the fast heuristic. Horizon = 8 quarters, intervals at 80% and 95%.\nPass-through specification. OLS distributed-lag regression with 0–4 quarter lags of Δlog(broad USD) and a contemporaneous Δlog(CPI) control; cumulative pass-through is the sum of the five FX coefficients.\nReproducibility. All paths via here::here(); FRED API key via an environment variable (.Renviron.example template, .Renviron git-ignored); a single command (source(here::here(\"scripts\", \"05_generate_outputs.R\"))) rebuilds every artifact in data/processed/ and outputs/.\n\nSee docs/methodology.md, docs/data_dictionary.md, and docs/research_themes.md for the full versions."
+  },
+  {
+    "objectID": "index.html#limitations",
+    "href": "index.html#limitations",
+    "title": "U.S. Macro, Trade, and Commodity Dashboard",
+    "section": "Limitations",
+    "text": "Limitations\nThis is a baseline workflow, not a production forecasting system. Specifically:\n\nUnivariate ARIMA only on the forecast side — no exogenous regressors, no multivariate structure (VAR / BVAR / factor models), no judgmental adjustment.\nPass-through is single-equation OLS; a richer treatment would use IV, state-space pass-through with time-varying coefficients, or a structural model with strategic complementarities in price-setting.\nQuarterly aggregation discards intra-quarter dynamics in oil and FX.\nUnconditional forecasts; no scenario conditioning or structural-break handling (e.g. COVID).\nNo automated refresh; reruns are manual.\n\n\nSource: Federal Reserve Bank of St. Louis (FRED). Pipeline source: yullieyang/r-macro-trade-commodity-forecast."
+  }
+]

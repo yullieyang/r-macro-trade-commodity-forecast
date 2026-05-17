@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Yullie Yang">
+<meta name="dcterms.date" content="2026-05-17">
+
+<title>U.S. Macro, Trade, and Commodity Dashboard – r-macro-trade-commodity-forecast</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-62e4d323c4afd3b74b2b6ad226a7b3a5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">r-macro-trade-commodity-forecast</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/yullieyang/r-macro-trade-commodity-forecast"> 
+<span class="menu-text">Repo</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/yullieyang/r-macro-trade-commodity-forecast#readme"> 
+<span class="menu-text">README</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/methodology.md"> 
+<span class="menu-text">Methodology</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#indicator-overview" id="toc-indicator-overview" class="nav-link" data-scroll-target="#indicator-overview">Indicator overview</a></li>
+  <li><a href="#net-exports" id="toc-net-exports" class="nav-link" data-scroll-target="#net-exports">Net exports</a></li>
+  <li><a href="#co-movement" id="toc-co-movement" class="nav-link" data-scroll-target="#co-movement">Co-movement</a></li>
+  <li><a href="#exchange-rate-pass-through-to-u.s.-import-prices" id="toc-exchange-rate-pass-through-to-u.s.-import-prices" class="nav-link" data-scroll-target="#exchange-rate-pass-through-to-u.s.-import-prices">Exchange-rate pass-through to U.S. import prices</a></li>
+  <li><a href="#forecasts-8-quarters-80-95-prediction-intervals" id="toc-forecasts-8-quarters-80-95-prediction-intervals" class="nav-link" data-scroll-target="#forecasts-8-quarters-80-95-prediction-intervals">Forecasts (8 quarters, 80% / 95% prediction intervals)</a></li>
+  <li><a href="#forecast-results" id="toc-forecast-results" class="nav-link" data-scroll-target="#forecast-results">Forecast results</a></li>
+  <li><a href="#model-summary" id="toc-model-summary" class="nav-link" data-scroll-target="#model-summary">Model summary</a></li>
+  <li><a href="#pass-through-regression-full-coefficients" id="toc-pass-through-regression-full-coefficients" class="nav-link" data-scroll-target="#pass-through-regression-full-coefficients">Pass-through regression — full coefficients</a></li>
+  <li><a href="#descriptive-summary" id="toc-descriptive-summary" class="nav-link" data-scroll-target="#descriptive-summary">Descriptive summary</a></li>
+  <li><a href="#methodology-highlights" id="toc-methodology-highlights" class="nav-link" data-scroll-target="#methodology-highlights">Methodology highlights</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">U.S. Macro, Trade, and Commodity Dashboard</h1>
+<p class="subtitle lead">Reproducible R workflow over FRED data — 13 series, quarterly panel with deflators and terms of trade, 8-quarter ARIMA forecasts, and an exchange-rate pass-through regression on U.S. trade prices.</p>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Yullie Yang </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 17, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This dashboard is auto-rendered from the repository on every push to <code>main</code> via a GitHub Actions workflow. All figures and tables shown below are the exact artifacts checked into the repo under <code>outputs/</code>.</p>
+</div>
+</div>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>Thirteen FRED series — WTI crude oil, natural gas, copper, nominal and real exports/imports, real GDP, unemployment, the effective federal funds rate, CPI, industrial production, and the broad trade-weighted U.S. dollar index — are pulled, harmonized to a common quarterly grid (period-average aggregation), and combined into a wide analysis panel with derived measures: net exports (nominal and real), trade balance ratio, <strong>implicit import and export deflators</strong>, <strong>terms of trade</strong>, YoY / QoQ growth on every level series, and log / quarterly-change of WTI.</p>
+<p>The same pipeline then:</p>
+<ol type="1">
+<li>fits <code>forecast::auto.arima()</code> to three structurally different target series — <strong>net exports</strong>, <strong>real GDP</strong>, and <strong>WTI crude oil</strong> — and produces an 8-quarter forecast with 80% / 95% prediction intervals for each, and</li>
+<li>estimates a <strong>distributed-lag exchange-rate pass-through</strong> regression of Δlog(import / export deflator) on Δlog(broad USD) with 0–4 quarter lags and a CPI control, reporting the cumulative pass-through coefficient.</li>
+</ol>
+</section>
+<section id="indicator-overview" class="level2">
+<h2 class="anchored" data-anchor-id="indicator-overview">Indicator overview</h2>
+<p><img src="outputs/figures/01_macro_trade_overview.png" class="img-fluid" alt="Multi-panel time series of macro, trade, and commodity indicators"></p>
+</section>
+<section id="net-exports" class="level2">
+<h2 class="anchored" data-anchor-id="net-exports">Net exports</h2>
+<p><img src="outputs/figures/02_net_exports_trend.png" class="img-fluid" alt="U.S. net exports of goods and services, quarterly, levels"></p>
+</section>
+<section id="co-movement" class="level2">
+<h2 class="anchored" data-anchor-id="co-movement">Co-movement</h2>
+<p><img src="outputs/figures/03_correlation_heatmap.png" class="img-fluid" alt="Pearson correlation heatmap across oil, trade, and macro variables"></p>
+</section>
+<section id="exchange-rate-pass-through-to-u.s.-import-prices" class="level2">
+<h2 class="anchored" data-anchor-id="exchange-rate-pass-through-to-u.s.-import-prices">Exchange-rate pass-through to U.S. import prices</h2>
+<p><img src="outputs/figures/06_fx_vs_import_deflator.png" class="img-fluid" alt="Contemporaneous co-movement scatter: Δlog(broad USD) vs Δlog(import deflator)"></p>
+<p>Cumulative 5-quarter pass-through coefficients (Σ β₀..β₄) from the distributed-lag regression:</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Trade-price series</th>
+<th style="text-align: right;">Cumulative pass-through (Σ β)</th>
+<th style="text-align: right;">n (quarters)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.670</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.457</td>
+<td style="text-align: right;">76</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A negative coefficient indicates a dollar appreciation passes through to lower U.S. import / export prices, as expected. Magnitudes well below one in absolute value reflect the well-documented incomplete pass-through characteristic of U.S. trade prices.</p>
+</section>
+<section id="forecasts-8-quarters-80-95-prediction-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="forecasts-8-quarters-80-95-prediction-intervals">Forecasts (8 quarters, 80% / 95% prediction intervals)</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Net exports</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Real GDP</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">WTI crude oil</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><img src="outputs/figures/04_forecast_net_exports.png" class="img-fluid"></p>
+<p>Selected model: <strong>ARIMA(0,1,0)</strong> — a random-walk baseline. The flat point forecast and fanning intervals are an honest acknowledgment that quarterly U.S. net exports are close to a random walk and a univariate ARIMA has little signal to extract.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><img src="outputs/figures/05_forecast_real_gdp.png" class="img-fluid"></p>
+<p>Selected model: <strong>ARIMA(0,1,1) with drift</strong>. The positive drift term captures trend growth; the MA(1) on first differences absorbs short-horizon noise.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><img src="outputs/figures/07_forecast_oil_wti.png" class="img-fluid"></p>
+<p>Selected model: <strong>ARIMA(1,1,2)</strong>. AR(1) coefficient ≈ 0.66 implies moderate persistence of quarterly shocks; the two MA terms absorb noise. The fan widens quickly — reflecting the well-known difficulty of multi-quarter commodity-price forecasting.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="forecast-results" class="level2">
+<h2 class="anchored" data-anchor-id="forecast-results">Forecast results</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Point forecast and 80% / 95% prediction intervals, 8-quarter horizon, per target.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Target</th>
+<th style="text-align: left;">Date</th>
+<th style="text-align: right;">Point</th>
+<th style="text-align: right;">Lower 80</th>
+<th style="text-align: right;">Upper 80</th>
+<th style="text-align: right;">Lower 95</th>
+<th style="text-align: right;">Upper 95</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-970.45</td>
+<td style="text-align: right;">-814.42</td>
+<td style="text-align: right;">-1011.74</td>
+<td style="text-align: right;">-773.12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2026-07-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-1002.76</td>
+<td style="text-align: right;">-782.10</td>
+<td style="text-align: right;">-1061.16</td>
+<td style="text-align: right;">-723.70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2026-10-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-1027.55</td>
+<td style="text-align: right;">-757.31</td>
+<td style="text-align: right;">-1099.08</td>
+<td style="text-align: right;">-685.78</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2027-01-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-1048.46</td>
+<td style="text-align: right;">-736.41</td>
+<td style="text-align: right;">-1131.05</td>
+<td style="text-align: right;">-653.81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2027-04-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-1066.87</td>
+<td style="text-align: right;">-717.99</td>
+<td style="text-align: right;">-1159.22</td>
+<td style="text-align: right;">-625.64</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2027-07-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-1083.52</td>
+<td style="text-align: right;">-701.34</td>
+<td style="text-align: right;">-1184.68</td>
+<td style="text-align: right;">-600.18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2027-10-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-1098.84</td>
+<td style="text-align: right;">-686.03</td>
+<td style="text-align: right;">-1208.10</td>
+<td style="text-align: right;">-576.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">2028-01-01</td>
+<td style="text-align: right;">-892.43</td>
+<td style="text-align: right;">-1113.09</td>
+<td style="text-align: right;">-671.78</td>
+<td style="text-align: right;">-1229.89</td>
+<td style="text-align: right;">-554.97</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">24269.90</td>
+<td style="text-align: right;">24004.47</td>
+<td style="text-align: right;">24535.34</td>
+<td style="text-align: right;">23863.95</td>
+<td style="text-align: right;">24675.85</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2026-07-01</td>
+<td style="text-align: right;">24368.12</td>
+<td style="text-align: right;">24029.04</td>
+<td style="text-align: right;">24707.19</td>
+<td style="text-align: right;">23849.54</td>
+<td style="text-align: right;">24886.69</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2026-10-01</td>
+<td style="text-align: right;">24466.33</td>
+<td style="text-align: right;">24066.97</td>
+<td style="text-align: right;">24865.69</td>
+<td style="text-align: right;">23855.56</td>
+<td style="text-align: right;">25077.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2027-01-01</td>
+<td style="text-align: right;">24564.54</td>
+<td style="text-align: right;">24112.87</td>
+<td style="text-align: right;">25016.21</td>
+<td style="text-align: right;">23873.77</td>
+<td style="text-align: right;">25255.31</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2027-04-01</td>
+<td style="text-align: right;">24662.75</td>
+<td style="text-align: right;">24164.23</td>
+<td style="text-align: right;">25161.27</td>
+<td style="text-align: right;">23900.33</td>
+<td style="text-align: right;">25425.17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2027-07-01</td>
+<td style="text-align: right;">24760.97</td>
+<td style="text-align: right;">24219.63</td>
+<td style="text-align: right;">25302.30</td>
+<td style="text-align: right;">23933.07</td>
+<td style="text-align: right;">25588.86</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2027-10-01</td>
+<td style="text-align: right;">24859.18</td>
+<td style="text-align: right;">24278.18</td>
+<td style="text-align: right;">25440.17</td>
+<td style="text-align: right;">23970.62</td>
+<td style="text-align: right;">25747.73</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">2028-01-01</td>
+<td style="text-align: right;">24957.39</td>
+<td style="text-align: right;">24339.27</td>
+<td style="text-align: right;">25575.51</td>
+<td style="text-align: right;">24012.06</td>
+<td style="text-align: right;">25902.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">78.43</td>
+<td style="text-align: right;">67.57</td>
+<td style="text-align: right;">89.28</td>
+<td style="text-align: right;">61.83</td>
+<td style="text-align: right;">95.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2026-07-01</td>
+<td style="text-align: right;">77.02</td>
+<td style="text-align: right;">59.82</td>
+<td style="text-align: right;">94.23</td>
+<td style="text-align: right;">50.71</td>
+<td style="text-align: right;">103.34</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2026-10-01</td>
+<td style="text-align: right;">76.10</td>
+<td style="text-align: right;">55.63</td>
+<td style="text-align: right;">96.57</td>
+<td style="text-align: right;">44.79</td>
+<td style="text-align: right;">107.41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2027-01-01</td>
+<td style="text-align: right;">75.49</td>
+<td style="text-align: right;">52.87</td>
+<td style="text-align: right;">98.10</td>
+<td style="text-align: right;">40.90</td>
+<td style="text-align: right;">110.08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2027-04-01</td>
+<td style="text-align: right;">75.09</td>
+<td style="text-align: right;">50.88</td>
+<td style="text-align: right;">99.29</td>
+<td style="text-align: right;">38.07</td>
+<td style="text-align: right;">112.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2027-07-01</td>
+<td style="text-align: right;">74.82</td>
+<td style="text-align: right;">49.33</td>
+<td style="text-align: right;">100.31</td>
+<td style="text-align: right;">35.84</td>
+<td style="text-align: right;">113.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2027-10-01</td>
+<td style="text-align: right;">74.64</td>
+<td style="text-align: right;">48.06</td>
+<td style="text-align: right;">101.23</td>
+<td style="text-align: right;">33.99</td>
+<td style="text-align: right;">115.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">2028-01-01</td>
+<td style="text-align: right;">74.53</td>
+<td style="text-align: right;">46.97</td>
+<td style="text-align: right;">102.09</td>
+<td style="text-align: right;">32.38</td>
+<td style="text-align: right;">116.68</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="model-summary" class="level2">
+<h2 class="anchored" data-anchor-id="model-summary">Model summary</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>ARIMA coefficient estimates and fit diagnostics for each target.</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 26%">
+<col style="width: 16%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 7%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Target</th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">Term</th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: right;">Std. error</th>
+<th style="text-align: right;">z</th>
+<th style="text-align: right;">p-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">ARIMA(0,1,0)</td>
+<td style="text-align: left;">aic</td>
+<td style="text-align: right;">1594.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">ARIMA(0,1,0)</td>
+<td style="text-align: left;">bic</td>
+<td style="text-align: right;">1597.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">ARIMA(0,1,0)</td>
+<td style="text-align: left;">sigma_sq</td>
+<td style="text-align: right;">3706.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">ARIMA(0,1,0)</td>
+<td style="text-align: left;">log_likelihood</td>
+<td style="text-align: right;">-796.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NetExports</td>
+<td style="text-align: left;">ARIMA(0,1,0)</td>
+<td style="text-align: left;">n_obs</td>
+<td style="text-align: right;">144.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">ARIMA(0,1,1) with drift</td>
+<td style="text-align: left;">ma1</td>
+<td style="text-align: right;">-0.2051</td>
+<td style="text-align: right;">0.08697</td>
+<td style="text-align: right;">-2.359</td>
+<td style="text-align: right;">0.0183400</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">ARIMA(0,1,1) with drift</td>
+<td style="text-align: left;">drift</td>
+<td style="text-align: right;">98.2100</td>
+<td style="text-align: right;">13.65000</td>
+<td style="text-align: right;">7.196</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">ARIMA(0,1,1) with drift</td>
+<td style="text-align: left;">aic</td>
+<td style="text-align: right;">1949.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">ARIMA(0,1,1) with drift</td>
+<td style="text-align: left;">bic</td>
+<td style="text-align: right;">1958.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">ARIMA(0,1,1) with drift</td>
+<td style="text-align: left;">sigma_sq</td>
+<td style="text-align: right;">42900.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">ARIMA(0,1,1) with drift</td>
+<td style="text-align: left;">log_likelihood</td>
+<td style="text-align: right;">-971.3000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: left;">ARIMA(0,1,1) with drift</td>
+<td style="text-align: left;">n_obs</td>
+<td style="text-align: right;">144.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">ar1</td>
+<td style="text-align: right;">0.6598</td>
+<td style="text-align: right;">0.15800</td>
+<td style="text-align: right;">4.175</td>
+<td style="text-align: right;">0.0000298</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">ma1</td>
+<td style="text-align: right;">-0.4297</td>
+<td style="text-align: right;">0.15590</td>
+<td style="text-align: right;">-2.756</td>
+<td style="text-align: right;">0.0058520</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">ma2</td>
+<td style="text-align: right;">-0.3596</td>
+<td style="text-align: right;">0.07688</td>
+<td style="text-align: right;">-4.677</td>
+<td style="text-align: right;">0.0000029</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">aic</td>
+<td style="text-align: right;">1029.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">bic</td>
+<td style="text-align: right;">1041.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">sigma_sq</td>
+<td style="text-align: right;">71.7200</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">log_likelihood</td>
+<td style="text-align: right;">-510.6000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: left;">ARIMA(1,1,2)</td>
+<td style="text-align: left;">n_obs</td>
+<td style="text-align: right;">144.0000</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="pass-through-regression-full-coefficients" class="level2">
+<h2 class="anchored" data-anchor-id="pass-through-regression-full-coefficients">Pass-through regression — full coefficients</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Distributed-lag regression of Δlog(trade deflator) on Δlog(broad USD) with 0..4 quarter lags and Δlog(CPI) as a control. <code>is_fx</code> flags the dollar-lag terms whose coefficients sum to the cumulative pass-through.</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 18%">
+<col style="width: 4%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">target</th>
+<th style="text-align: right;">cumulative_passthrough</th>
+<th style="text-align: right;">n_obs</th>
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
+<th style="text-align: left;">is_fx</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.6700</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.008875</td>
+<td style="text-align: right;">0.001820</td>
+<td style="text-align: right;">-4.87700</td>
+<td style="text-align: right;">0.0000067</td>
+<td style="text-align: right;">-0.012500</td>
+<td style="text-align: right;">-0.005244</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.6700</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx</td>
+<td style="text-align: right;">-0.286800</td>
+<td style="text-align: right;">0.053590</td>
+<td style="text-align: right;">-5.35100</td>
+<td style="text-align: right;">0.0000011</td>
+<td style="text-align: right;">-0.393700</td>
+<td style="text-align: right;">-0.179900</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.6700</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag1</td>
+<td style="text-align: right;">-0.257700</td>
+<td style="text-align: right;">0.052410</td>
+<td style="text-align: right;">-4.91800</td>
+<td style="text-align: right;">0.0000057</td>
+<td style="text-align: right;">-0.362300</td>
+<td style="text-align: right;">-0.153200</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.6700</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag2</td>
+<td style="text-align: right;">-0.065710</td>
+<td style="text-align: right;">0.053020</td>
+<td style="text-align: right;">-1.23900</td>
+<td style="text-align: right;">0.2194000</td>
+<td style="text-align: right;">-0.171500</td>
+<td style="text-align: right;">0.040060</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.6700</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag3</td>
+<td style="text-align: right;">-0.063390</td>
+<td style="text-align: right;">0.052120</td>
+<td style="text-align: right;">-1.21600</td>
+<td style="text-align: right;">0.2281000</td>
+<td style="text-align: right;">-0.167400</td>
+<td style="text-align: right;">0.040590</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.6700</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag4</td>
+<td style="text-align: right;">0.003558</td>
+<td style="text-align: right;">0.049670</td>
+<td style="text-align: right;">0.07164</td>
+<td style="text-align: right;">0.9431000</td>
+<td style="text-align: right;">-0.095520</td>
+<td style="text-align: right;">0.102600</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ImportDeflator</td>
+<td style="text-align: right;">-0.6700</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_cpi</td>
+<td style="text-align: right;">2.058000</td>
+<td style="text-align: right;">0.202800</td>
+<td style="text-align: right;">10.15000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">1.653000</td>
+<td style="text-align: right;">2.462000</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.4568</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.005436</td>
+<td style="text-align: right;">0.001682</td>
+<td style="text-align: right;">-3.23100</td>
+<td style="text-align: right;">0.0018920</td>
+<td style="text-align: right;">-0.008792</td>
+<td style="text-align: right;">-0.002079</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.4568</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx</td>
+<td style="text-align: right;">-0.159300</td>
+<td style="text-align: right;">0.049540</td>
+<td style="text-align: right;">-3.21500</td>
+<td style="text-align: right;">0.0019830</td>
+<td style="text-align: right;">-0.258100</td>
+<td style="text-align: right;">-0.060470</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.4568</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag1</td>
+<td style="text-align: right;">-0.119100</td>
+<td style="text-align: right;">0.048460</td>
+<td style="text-align: right;">-2.45900</td>
+<td style="text-align: right;">0.0164600</td>
+<td style="text-align: right;">-0.215800</td>
+<td style="text-align: right;">-0.022460</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.4568</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag2</td>
+<td style="text-align: right;">-0.081860</td>
+<td style="text-align: right;">0.049020</td>
+<td style="text-align: right;">-1.67000</td>
+<td style="text-align: right;">0.0994700</td>
+<td style="text-align: right;">-0.179600</td>
+<td style="text-align: right;">0.015930</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.4568</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag3</td>
+<td style="text-align: right;">-0.043960</td>
+<td style="text-align: right;">0.048190</td>
+<td style="text-align: right;">-0.91220</td>
+<td style="text-align: right;">0.3648000</td>
+<td style="text-align: right;">-0.140100</td>
+<td style="text-align: right;">0.052180</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.4568</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_fx_lag4</td>
+<td style="text-align: right;">-0.052520</td>
+<td style="text-align: right;">0.045920</td>
+<td style="text-align: right;">-1.14400</td>
+<td style="text-align: right;">0.2566000</td>
+<td style="text-align: right;">-0.144100</td>
+<td style="text-align: right;">0.039080</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ExportDeflator</td>
+<td style="text-align: right;">-0.4568</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;">dlog_cpi</td>
+<td style="text-align: right;">1.728000</td>
+<td style="text-align: right;">0.187500</td>
+<td style="text-align: right;">9.21800</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">1.354000</td>
+<td style="text-align: right;">2.102000</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="descriptive-summary" class="level2">
+<h2 class="anchored" data-anchor-id="descriptive-summary">Descriptive summary</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Per-series summary statistics on the cleaned quarterly panel.</caption>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 6%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">label</th>
+<th style="text-align: right;">n_obs</th>
+<th style="text-align: left;">start</th>
+<th style="text-align: left;">end</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">median</th>
+<th style="text-align: right;">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CPI</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">211.900</td>
+<td style="text-align: right;">53.390</td>
+<td style="text-align: right;">128.000</td>
+<td style="text-align: right;">212.600</td>
+<td style="text-align: right;">332.40</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CopperGlobal</td>
+<td style="text-align: right;">137</td>
+<td style="text-align: left;">1992-01-01</td>
+<td style="text-align: left;">2026-01-01</td>
+<td style="text-align: right;">5232.000</td>
+<td style="text-align: right;">2894.000</td>
+<td style="text-align: right;">1408.000</td>
+<td style="text-align: right;">5668.000</td>
+<td style="text-align: right;">12820.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Exports</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-01-01</td>
+<td style="text-align: right;">1710.000</td>
+<td style="text-align: right;">839.700</td>
+<td style="text-align: right;">538.200</td>
+<td style="text-align: right;">1623.000</td>
+<td style="text-align: right;">3524.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FedFunds</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">2.890</td>
+<td style="text-align: right;">2.330</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">2.967</td>
+<td style="text-align: right;">8.25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Imports</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-01-01</td>
+<td style="text-align: right;">2191.000</td>
+<td style="text-align: right;">1079.000</td>
+<td style="text-align: right;">613.900</td>
+<td style="text-align: right;">2299.000</td>
+<td style="text-align: right;">4558.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">IndustrialProduction</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">90.490</td>
+<td style="text-align: right;">12.890</td>
+<td style="text-align: right;">60.720</td>
+<td style="text-align: right;">95.340</td>
+<td style="text-align: right;">104.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NatGasHH</td>
+<td style="text-align: right;">118</td>
+<td style="text-align: left;">1997-01-01</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">4.091</td>
+<td style="text-align: right;">2.042</td>
+<td style="text-align: right;">1.705</td>
+<td style="text-align: right;">3.445</td>
+<td style="text-align: right;">12.21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OilWTI</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">52.000</td>
+<td style="text-align: right;">28.950</td>
+<td style="text-align: right;">12.930</td>
+<td style="text-align: right;">48.810</td>
+<td style="text-align: right;">123.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealExports</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-01-01</td>
+<td style="text-align: right;">1708.000</td>
+<td style="text-align: right;">638.000</td>
+<td style="text-align: right;">654.400</td>
+<td style="text-align: right;">1715.000</td>
+<td style="text-align: right;">2769.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RealGDP</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-01-01</td>
+<td style="text-align: right;">16430.000</td>
+<td style="text-align: right;">3995.000</td>
+<td style="text-align: right;">9952.000</td>
+<td style="text-align: right;">16560.000</td>
+<td style="text-align: right;">24170.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RealImports</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-01-01</td>
+<td style="text-align: right;">2172.000</td>
+<td style="text-align: right;">896.000</td>
+<td style="text-align: right;">686.900</td>
+<td style="text-align: right;">2312.000</td>
+<td style="text-align: right;">4040.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">USDIndex</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: left;">2006-01-01</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">106.400</td>
+<td style="text-align: right;">12.330</td>
+<td style="text-align: right;">86.810</td>
+<td style="text-align: right;">110.300</td>
+<td style="text-align: right;">127.60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unemployment</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: left;">1990-01-01</td>
+<td style="text-align: left;">2026-04-01</td>
+<td style="text-align: right;">5.656</td>
+<td style="text-align: right;">1.729</td>
+<td style="text-align: right;">3.533</td>
+<td style="text-align: right;">5.317</td>
+<td style="text-align: right;">13.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="methodology-highlights" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-highlights">Methodology highlights</h2>
+<ul>
+<li><strong>Frequency alignment.</strong> Daily and monthly series are aggregated to quarterly period averages; quarterly series pass through with their date normalized to quarter-start.</li>
+<li><strong>Derived measures.</strong> Nominal and real net exports, trade balance ratio, implicit import / export deflators, terms of trade, YoY / QoQ growth on every level series, and log / quarterly-change transforms for WTI.</li>
+<li><strong>Forecast configuration.</strong> <code>auto.arima()</code> with <code>seasonal = TRUE</code>, <code>stepwise = FALSE</code>, <code>approximation = FALSE</code> — i.e.&nbsp;the full model-space search rather than the fast heuristic. Horizon = 8 quarters, intervals at 80% and 95%.</li>
+<li><strong>Pass-through specification.</strong> OLS distributed-lag regression with 0–4 quarter lags of Δlog(broad USD) and a contemporaneous Δlog(CPI) control; cumulative pass-through is the sum of the five FX coefficients.</li>
+<li><strong>Reproducibility.</strong> All paths via <code>here::here()</code>; FRED API key via an environment variable (<code>.Renviron.example</code> template, <code>.Renviron</code> git-ignored); a single command (<code>source(here::here("scripts", "05_generate_outputs.R"))</code>) rebuilds every artifact in <code>data/processed/</code> and <code>outputs/</code>.</li>
+</ul>
+<p>See <a href="https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/methodology.md"><code>docs/methodology.md</code></a>, <a href="https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/data_dictionary.md"><code>docs/data_dictionary.md</code></a>, and <a href="https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/research_themes.md"><code>docs/research_themes.md</code></a> for the full versions.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>This is a <strong>baseline workflow</strong>, not a production forecasting system. Specifically:</p>
+<ul>
+<li>Univariate ARIMA only on the forecast side — no exogenous regressors, no multivariate structure (VAR / BVAR / factor models), no judgmental adjustment.</li>
+<li>Pass-through is single-equation OLS; a richer treatment would use IV, state-space pass-through with time-varying coefficients, or a structural model with strategic complementarities in price-setting.</li>
+<li>Quarterly aggregation discards intra-quarter dynamics in oil and FX.</li>
+<li>Unconditional forecasts; no scenario conditioning or structural-break handling (e.g.&nbsp;COVID).</li>
+<li>No automated refresh; reruns are manual.</li>
+</ul>
+<hr>
+<p><em>Source: Federal Reserve Bank of St.&nbsp;Louis (FRED). Pipeline source: <a href="https://github.com/yullieyang/r-macro-trade-commodity-forecast"><code>yullieyang/r-macro-trade-commodity-forecast</code></a>.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
