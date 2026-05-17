@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you reference this repository in academic or research-support work, please cite it as below."
+title: "r-macro-trade-commodity-forecast: A reproducible R workflow for U.S. macro, trade, and commodity indicators"
+authors:
+  - family-names: "Yang"
+    given-names: "Yullie"
+type: software
+license: MIT
+repository-code: "https://github.com/yullieyang/r-macro-trade-commodity-forecast"
+url: "https://yullieyang.github.io/r-macro-trade-commodity-forecast/"
+keywords:
+  - macroeconomics
+  - international-trade
+  - forecasting
+  - auto.arima
+  - exchange-rate-pass-through
+  - reproducible-research
+  - R
