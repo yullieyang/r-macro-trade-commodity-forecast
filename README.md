@@ -1,5 +1,20 @@
 # r-macro-trade-commodity-forecast
 
+[![R](https://img.shields.io/badge/R-%E2%89%A5%204.2-1f4e79?logo=r&logoColor=white)](https://www.r-project.org/)
+[![CI](https://github.com/yullieyang/r-macro-trade-commodity-forecast/actions/workflows/r-checks.yml/badge.svg)](https://github.com/yullieyang/r-macro-trade-commodity-forecast/actions/workflows/r-checks.yml)
+[![Pages](https://img.shields.io/badge/dashboard-GitHub%20Pages-1f4e79)](https://yullieyang.github.io/r-macro-trade-commodity-forecast/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-9c1f1f.svg)](LICENSE)
+[![Data: FRED](https://img.shields.io/badge/data-FRED-1f4e79)](https://fred.stlouisfed.org/)
+[![Last commit](https://img.shields.io/github/last-commit/yullieyang/r-macro-trade-commodity-forecast?color=1f4e79)](https://github.com/yullieyang/r-macro-trade-commodity-forecast/commits/main)
+
+> A reproducible R workflow for U.S. macro, trade, and commodity indicators
+> from FRED — 13 series, a quarterly panel with implicit trade deflators and
+> terms of trade, 8-quarter `auto.arima` forecasts of net exports, real GDP,
+> and WTI crude oil, and an exchange-rate pass-through regression on U.S.
+> import and export prices.
+
+![U.S. macro / trade / commodity overview](outputs/figures/01_macro_trade_overview.png)
+
 A reproducible R workflow for retrieving, cleaning, analyzing, and forecasting
 U.S. macroeconomic, **trade-flow**, and commodity-price indicators — together
 with an **exchange-rate pass-through** analysis on U.S. trade prices. The

@@ -1,0 +1,202 @@
+---
+title: "U.S. Macro, Trade, and Commodity Dashboard"
+subtitle: "Reproducible R workflow over FRED data — 13 series, quarterly panel with deflators and terms of trade, 8-quarter ARIMA forecasts, and an exchange-rate pass-through regression on U.S. trade prices."
+date: last-modified
+author: "Yullie Yang"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(readr)
+library(knitr)
+library(dplyr)
+
+read_out <- function(p) suppressMessages(read_csv(p, show_col_types = FALSE))
+
+descr        <- read_out("outputs/tables/descriptive_summary.csv")
+model_sum    <- read_out("outputs/tables/model_summary.csv")
+forecasts    <- read_out("outputs/tables/forecast_results.csv")
+passthrough  <- read_out("outputs/tables/passthrough_coefficients.csv")
+```
+
+::: {.callout-note}
+This dashboard is auto-rendered from the repository on every push to `main`
+via a GitHub Actions workflow. All figures and tables shown below are the
+exact artifacts checked into the repo under `outputs/`.
+:::
+
+## Overview
+
+Thirteen FRED series — WTI crude oil, natural gas, copper, nominal and real
+exports/imports, real GDP, unemployment, the effective federal funds rate,
+CPI, industrial production, and the broad trade-weighted U.S. dollar index —
+are pulled, harmonized to a common quarterly grid (period-average aggregation),
+and combined into a wide analysis panel with derived measures:
+net exports (nominal and real), trade balance ratio, **implicit import and
+export deflators**, **terms of trade**, YoY / QoQ growth on every level
+series, and log / quarterly-change of WTI.
+
+The same pipeline then:
+
+1. fits `forecast::auto.arima()` to three structurally different target series
+   — **net exports**, **real GDP**, and **WTI crude oil** — and produces an
+   8-quarter forecast with 80% / 95% prediction intervals for each, and
+2. estimates a **distributed-lag exchange-rate pass-through** regression of
+   Δlog(import / export deflator) on Δlog(broad USD) with 0–4 quarter lags
+   and a CPI control, reporting the cumulative pass-through coefficient.
+
+## Indicator overview
+
+![](outputs/figures/01_macro_trade_overview.png){fig-alt="Multi-panel time series of macro, trade, and commodity indicators"}
+
+## Net exports
+
+![](outputs/figures/02_net_exports_trend.png){fig-alt="U.S. net exports of goods and services, quarterly, levels"}
+
+## Co-movement
+
+![](outputs/figures/03_correlation_heatmap.png){fig-alt="Pearson correlation heatmap across oil, trade, and macro variables"}
+
+## Exchange-rate pass-through to U.S. import prices
+
+![](outputs/figures/06_fx_vs_import_deflator.png){fig-alt="Contemporaneous co-movement scatter: Δlog(broad USD) vs Δlog(import deflator)"}
+
+Cumulative 5-quarter pass-through coefficients (Σ β₀..β₄) from the
+distributed-lag regression:
+
+```{r passthrough-headline}
+passthrough |>
+  select(target, cumulative_passthrough, n_obs) |>
+  distinct() |>
+  mutate(cumulative_passthrough = round(cumulative_passthrough, 3)) |>
+  kable(col.names = c("Trade-price series", "Cumulative pass-through (Σ β)", "n (quarters)"))
+```
+
+A negative coefficient indicates a dollar appreciation passes through to
+lower U.S. import / export prices, as expected. Magnitudes well below one
+in absolute value reflect the well-documented incomplete pass-through
+characteristic of U.S. trade prices.
+
+## Forecasts (8 quarters, 80% / 95% prediction intervals)
+
+::: {.panel-tabset}
+
+### Net exports
+
+![](outputs/figures/04_forecast_net_exports.png)
+
+Selected model: **ARIMA(0,1,0)** — a random-walk baseline. The flat point
+forecast and fanning intervals are an honest acknowledgment that
+quarterly U.S. net exports are close to a random walk and a univariate
+ARIMA has little signal to extract.
+
+### Real GDP
+
+![](outputs/figures/05_forecast_real_gdp.png)
+
+Selected model: **ARIMA(0,1,1) with drift**. The positive drift term
+captures trend growth; the MA(1) on first differences absorbs
+short-horizon noise.
+
+### WTI crude oil
+
+![](outputs/figures/07_forecast_oil_wti.png)
+
+Selected model: **ARIMA(1,1,2)**. AR(1) coefficient ≈ 0.66 implies
+moderate persistence of quarterly shocks; the two MA terms absorb noise.
+The fan widens quickly — reflecting the well-known difficulty of
+multi-quarter commodity-price forecasting.
+
+:::
+
+## Forecast results
+
+```{r forecast-table}
+forecasts |>
+  mutate(across(where(is.numeric), \(x) round(x, 2))) |>
+  kable(
+    caption = "Point forecast and 80% / 95% prediction intervals, 8-quarter horizon, per target.",
+    col.names = c("Target", "Date", "Point", "Lower 80", "Upper 80", "Lower 95", "Upper 95")
+  )
+```
+
+## Model summary
+
+```{r model-table}
+model_sum |>
+  mutate(across(where(is.numeric), \(x) signif(x, 4))) |>
+  kable(
+    caption = "ARIMA coefficient estimates and fit diagnostics for each target.",
+    col.names = c("Target", "Model", "Term", "Estimate", "Std. error", "z", "p-value")
+  )
+```
+
+## Pass-through regression — full coefficients
+
+```{r passthrough-table}
+passthrough |>
+  mutate(across(where(is.numeric), \(x) signif(x, 4))) |>
+  kable(
+    caption = "Distributed-lag regression of Δlog(trade deflator) on Δlog(broad USD) with 0..4 quarter lags and Δlog(CPI) as a control. `is_fx` flags the dollar-lag terms whose coefficients sum to the cumulative pass-through."
+  )
+```
+
+## Descriptive summary
+
+```{r descr-table}
+descr |>
+  mutate(across(where(is.numeric), \(x) signif(x, 4))) |>
+  kable(
+    caption = "Per-series summary statistics on the cleaned quarterly panel."
+  )
+```
+
+## Methodology highlights
+
+- **Frequency alignment.** Daily and monthly series are aggregated to
+  quarterly period averages; quarterly series pass through with their
+  date normalized to quarter-start.
+- **Derived measures.** Nominal and real net exports, trade balance ratio,
+  implicit import / export deflators, terms of trade, YoY / QoQ growth on
+  every level series, and log / quarterly-change transforms for WTI.
+- **Forecast configuration.** `auto.arima()` with `seasonal = TRUE`,
+  `stepwise = FALSE`, `approximation = FALSE` — i.e. the full model-space
+  search rather than the fast heuristic. Horizon = 8 quarters, intervals
+  at 80% and 95%.
+- **Pass-through specification.** OLS distributed-lag regression with
+  0–4 quarter lags of Δlog(broad USD) and a contemporaneous Δlog(CPI)
+  control; cumulative pass-through is the sum of the five FX coefficients.
+- **Reproducibility.** All paths via `here::here()`; FRED API key via an
+  environment variable (`.Renviron.example` template, `.Renviron`
+  git-ignored); a single command (`source(here::here("scripts",
+  "05_generate_outputs.R"))`) rebuilds every artifact in `data/processed/`
+  and `outputs/`.
+
+See [`docs/methodology.md`](https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/methodology.md),
+[`docs/data_dictionary.md`](https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/data_dictionary.md),
+and [`docs/research_themes.md`](https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/research_themes.md)
+for the full versions.
+
+## Limitations
+
+This is a **baseline workflow**, not a production forecasting system.
+Specifically:
+
+- Univariate ARIMA only on the forecast side — no exogenous regressors,
+  no multivariate structure (VAR / BVAR / factor models), no judgmental
+  adjustment.
+- Pass-through is single-equation OLS; a richer treatment would use IV,
+  state-space pass-through with time-varying coefficients, or a structural
+  model with strategic complementarities in price-setting.
+- Quarterly aggregation discards intra-quarter dynamics in oil and FX.
+- Unconditional forecasts; no scenario conditioning or structural-break
+  handling (e.g. COVID).
+- No automated refresh; reruns are manual.
+
+---
+
+*Source: Federal Reserve Bank of St. Louis (FRED). Pipeline source:
+[`yullieyang/r-macro-trade-commodity-forecast`](https://github.com/yullieyang/r-macro-trade-commodity-forecast).*

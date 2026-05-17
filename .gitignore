@@ -19,3 +19,7 @@ data/raw/*
 
 # Processed data and generated outputs ARE committed so the GitHub page
 # renders figures and so reviewers can inspect artifacts without running R.
+
+# Quarto render output (deployed to gh-pages by Actions, not committed to main)
+/_site/
+/.quarto/

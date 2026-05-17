@@ -1,0 +1,29 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+
+website:
+  title: "r-macro-trade-commodity-forecast"
+  description: "Reproducible R workflow for U.S. macro, trade, and commodity indicators."
+  navbar:
+    background: "#1f4e79"
+    foreground: white
+    right:
+      - text: "Repo"
+        href: https://github.com/yullieyang/r-macro-trade-commodity-forecast
+      - text: "README"
+        href: https://github.com/yullieyang/r-macro-trade-commodity-forecast#readme
+      - text: "Methodology"
+        href: https://github.com/yullieyang/r-macro-trade-commodity-forecast/blob/main/docs/methodology.md
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-location: right
+    toc-depth: 2
+    code-tools: false
+    page-layout: full
+    fig-align: center
