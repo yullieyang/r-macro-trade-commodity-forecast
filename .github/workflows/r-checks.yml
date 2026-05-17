@@ -22,18 +22,11 @@ jobs:
           r-version: '4.2'
           use-public-rspm: true
 
-      - name: Install lintr, testthat, and pipeline deps
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: |
-            any::lintr
-            any::testthat
-            any::dplyr
-            any::tidyr
-            any::tibble
-            any::lubridate
-            any::broom
-            any::here
+      - name: Restore pinned packages via renv
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Install lintr (not in renv.lock)
+        run: Rscript -e 'install.packages("lintr", repos = "https://packagemanager.posit.co/cran/__linux__/noble/latest")'
 
       - name: Parse every .R file (syntax check)
         run: |
