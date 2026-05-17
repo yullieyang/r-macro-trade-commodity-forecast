@@ -24,7 +24,8 @@ stages <- c(
   "01_get_data.R",
   "02_clean_transform_data.R",
   "03_exploratory_analysis.R",
-  "04_forecast_model.R"
+  "04_forecast_model.R",
+  "04b_pass_through.R"
 )
 
 message("Pipeline start: ", Sys.time())

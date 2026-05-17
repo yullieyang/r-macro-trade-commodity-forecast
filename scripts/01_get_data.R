@@ -27,15 +27,26 @@ START_DATE <- as.Date("1990-01-01")
 # swap in/out indicators across the entire pipeline.
 SERIES_SPEC <- tibble::tribble(
   ~series_id,    ~label,
-  "DCOILWTICO",  "OilWTI",
-  "EXPGS",       "Exports",
-  "IMPGS",       "Imports",
+  # --- Macro headline ---
   "GDPC1",       "RealGDP",
   "UNRATE",      "Unemployment",
   "FEDFUNDS",    "FedFunds",
   "CPIAUCSL",    "CPI",
   "INDPRO",      "IndustrialProduction",
-  "DTWEXBGS",    "USDIndex"
+  # --- Trade flows (nominal and real) ---
+  # Real volumes let us separate price effects from quantity effects in trade,
+  # which is the central distinction in international-trade research on
+  # exchange-rate pass-through and trade-flow elasticities.
+  "EXPGS",       "Exports",
+  "IMPGS",       "Imports",
+  "EXPGSC1",     "RealExports",
+  "IMPGSC1",     "RealImports",
+  # --- Dollar (effective exchange rate, broad index) ---
+  "DTWEXBGS",    "USDIndex",
+  # --- Commodity prices ---
+  "DCOILWTICO",  "OilWTI",
+  "DHHNGSP",     "NatGasHH",
+  "PCOPPUSDM",   "CopperGlobal"
 )
 
 RAW_PATH <- proj_path("data", "raw", "fred_raw_long.csv")

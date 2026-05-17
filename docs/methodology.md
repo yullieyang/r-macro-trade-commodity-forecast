@@ -37,14 +37,24 @@ mixed-frequency approach (MIDAS, weekly state-space) would be preferable.
 
 ## 3. Derived measures
 
-| Measure                 | Formula                                       |
-|-------------------------|-----------------------------------------------|
-| `NetExports`            | `Exports - Imports`                           |
-| `TradeBalanceRatio`     | `NetExports / (Exports + Imports)`            |
-| `<var>_yoy`             | `value_t / value_{t-4} - 1`                   |
-| `<var>_qoq`             | `value_t / value_{t-1} - 1`                   |
-| `OilWTI_log`            | `log(OilWTI)`                                 |
-| `OilWTI_change`         | `OilWTI_t - OilWTI_{t-1}`                     |
+| Measure                 | Formula                                                |
+|-------------------------|--------------------------------------------------------|
+| `NetExports`            | `Exports - Imports` (nominal)                          |
+| `RealNetExports`        | `RealExports - RealImports`                            |
+| `TradeBalanceRatio`     | `NetExports / (Exports + Imports)`                     |
+| `ImportDeflator`        | `(Imports / RealImports) * 100`  *(implicit price)*    |
+| `ExportDeflator`        | `(Exports / RealExports) * 100`  *(implicit price)*    |
+| `TermsOfTrade`          | `ExportDeflator / ImportDeflator`                      |
+| `<var>_yoy`             | `value_t / value_{t-4} - 1`                            |
+| `<var>_qoq`             | `value_t / value_{t-1} - 1`                            |
+| `OilWTI_log`            | `log(OilWTI)`                                          |
+| `OilWTI_change`         | `OilWTI_t - OilWTI_{t-1}`                              |
+
+The implicit `ImportDeflator` and `ExportDeflator` are constructed by dividing
+the nominal trade level by the corresponding chained-real level — recovering
+a Paasche-style price index without depending on a separately published BLS
+trade-price series. These deflators are the price object that exchange-rate
+changes pass through to, and they drive the pass-through analysis in §5.
 
 `TradeBalanceRatio` is reported because the headline `NetExports` level is
 sensitive to overall trade volume, while the ratio is more comparable across
@@ -52,7 +62,9 @@ decades of nominal-trade growth.
 
 ## 4. Forecasting model
 
-Stage 4 fits `forecast::auto.arima()` to quarterly real net exports with:
+Stage 4 fits `forecast::auto.arima()` to a configurable list of targets —
+currently quarterly **net exports**, **real GDP**, and **crude oil (WTI)** —
+with:
 
 - `seasonal = TRUE` (so a seasonal AR/MA structure may be selected).
 - `stepwise = FALSE` and `approximation = FALSE` to search the full model
@@ -66,7 +78,32 @@ regressors and makes no structural assumptions, so it serves as a sanity
 check against which richer models (VAR, BVAR, factor-augmented regressions)
 would be benchmarked in a production setting.
 
-## 5. Reproducibility guardrails
+## 5. Exchange-rate pass-through to trade prices
+
+Stage 4b estimates a distributed-lag regression of log-changes in U.S.
+implicit trade deflators on log-changes in the broad trade-weighted dollar:
+
+> Δlog(P_M)_t  =  α  +  Σ_{k=0..K} β_k · Δlog(USD)_{t-k}  +  γ · Δlog(CPI)_t  +  ε_t
+
+The sum **Σ β_k** is the *cumulative pass-through* — the share of a 1-percent
+dollar move that is reflected in U.S. import prices after K quarters. The
+empirical international-trade literature consistently finds short-run
+pass-through far below one for U.S. imports, with the bulk of dollar
+fluctuations absorbed by exporter mark-ups (incomplete pass-through). The
+script writes the full coefficient table to
+`outputs/tables/passthrough_coefficients.csv` and a scatter of contemporaneous
+co-movement to `outputs/figures/06_fx_vs_import_deflator.png`. An equivalent
+fit is reported for the U.S. export deflator.
+
+This stage is intentionally simple — a single-equation OLS with HC-robust
+errors via `broom::tidy()` — to keep the result inspectable on the README.
+A richer treatment would use IV (instrumenting the dollar with a basket-shift
+or monetary-policy surprise), a state-space pass-through model with
+time-varying coefficients, or a structural model with strategic
+complementarities in price-setting; those are noted in `Future improvements`
+on the README.
+
+## 6. Reproducibility guardrails
 
 - All file paths go through `here::here()`; no `setwd()` calls, no absolute
   paths in source.
@@ -79,7 +116,7 @@ would be benchmarked in a production setting.
   is deterministic, to insulate future additions (e.g. bootstrapped
   intervals) from non-determinism.
 
-## 6. AI/LLM tooling — responsible use note
+## 7. AI/LLM tooling — responsible use note
 
 LLM assistants were used during development for boilerplate scaffolding,
 docstring drafting, and rubber-duck code review. All generated code was

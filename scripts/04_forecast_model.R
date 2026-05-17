@@ -35,9 +35,10 @@ FIG_DIR         <- proj_path("outputs", "figures")
 # Net exports is a near-random-walk and provides an honest baseline;
 # real GDP exercises a richer trend+seasonal structure.
 TARGETS <- tibble::tribble(
-  ~column,       ~display_name,          ~fig_file,
-  "NetExports",  "Net exports (USD B)",  "04_forecast_net_exports.png",
-  "RealGDP",     "Real GDP (USD B)",     "05_forecast_real_gdp.png"
+  ~column,       ~display_name,                  ~fig_file,
+  "NetExports",  "Net exports (USD B)",          "04_forecast_net_exports.png",
+  "RealGDP",     "Real GDP (USD B)",             "05_forecast_real_gdp.png",
+  "OilWTI",      "Crude oil, WTI (USD/barrel)",  "07_forecast_oil_wti.png"
 )
 
 FORECAST_HORIZON <- 8L  # quarters

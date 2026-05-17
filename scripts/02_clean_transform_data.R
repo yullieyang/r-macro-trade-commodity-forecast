@@ -46,6 +46,10 @@ quarterly_wide <- add_trade_derived(quarterly_wide)
 # Oil derived measures (log price, quarterly change).
 quarterly_wide <- add_oil_derived(quarterly_wide, oil_col = "OilWTI")
 
+# Implicit import/export deflators + real net exports + terms of trade.
+# These are the price objects that exchange-rate changes pass through to.
+quarterly_wide <- add_trade_deflators(quarterly_wide)
+
 # Drop the most recent quarter if any headline level series is still NA
 # (FRED sometimes lags GDP/trade by a quarter). This keeps the analysis
 # panel balanced without ad-hoc per-series filtering downstream.

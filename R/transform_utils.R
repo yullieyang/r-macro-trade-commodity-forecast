@@ -110,3 +110,30 @@ add_oil_derived <- function(df_wide,
       OilWTI_change = .data[[oil_col]] - dplyr::lag(.data[[oil_col]], 1L)
     )
 }
+
+#' Compute implicit trade deflators from nominal and real trade levels.
+#'
+#' Implicit deflator = nominal level / real level x 100. This recovers a
+#' chained Paasche-style price index for traded goods and services without
+#' needing a separately published BLS import/export price index. The deflator
+#' is the price object that exchange-rate movements pass through to.
+#'
+#' @param df_wide Wide quarterly panel containing nominal and real trade
+#'   columns (`Exports`, `RealExports`, `Imports`, `RealImports`).
+add_trade_deflators <- function(df_wide) {
+  needed <- c("Exports", "RealExports", "Imports", "RealImports")
+  missing <- setdiff(needed, names(df_wide))
+  if (length(missing)) {
+    warning("Skipping trade deflators; missing columns: ",
+            paste(missing, collapse = ", "))
+    return(df_wide)
+  }
+
+  df_wide |>
+    dplyr::mutate(
+      ImportDeflator = (Imports / RealImports) * 100,
+      ExportDeflator = (Exports / RealExports) * 100,
+      TermsOfTrade   = ExportDeflator / ImportDeflator,
+      RealNetExports = RealExports - RealImports
+    )
+}
