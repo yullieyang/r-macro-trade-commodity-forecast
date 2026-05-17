@@ -95,13 +95,15 @@ script writes the full coefficient table to
 co-movement to `outputs/figures/06_fx_vs_import_deflator.png`. An equivalent
 fit is reported for the U.S. export deflator.
 
-This stage is intentionally simple — a single-equation OLS with HC-robust
-errors via `broom::tidy()` — to keep the result inspectable on the README.
-A richer treatment would use IV (instrumenting the dollar with a basket-shift
-or monetary-policy surprise), a state-space pass-through model with
-time-varying coefficients, or a structural model with strategic
-complementarities in price-setting; those are noted in `Future improvements`
-on the README.
+This stage is intentionally simple — a single-equation OLS with classical
+(non-robust) standard errors and 95% confidence intervals from
+`broom::tidy(conf.int = TRUE)` — to keep the result inspectable on the
+README. Heteroscedasticity-consistent (HC) standard errors via
+`sandwich::vcovHC()` are a noted next step. A richer treatment would also
+use IV (instrumenting the dollar with a basket-shift or monetary-policy
+surprise), a state-space pass-through model with time-varying coefficients,
+or a structural model with strategic complementarities in price-setting;
+those are noted in `Future improvements` on the README.
 
 ## 6. Reproducibility guardrails
 
