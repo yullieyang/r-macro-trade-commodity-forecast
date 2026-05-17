@@ -138,15 +138,29 @@ r-macro-trade-commodity-forecast/
 
 ### 1. Install R packages
 
+The repository ships a [`renv.lock`](renv.lock) with pinned package versions.
+The reproducible install is:
+
+```r
+install.packages("renv")
+renv::restore()
+```
+
+`renv` will detect the project, install the packages listed in `renv.lock`
+into a project-local library, and isolate them from your global R library.
+
+If you prefer to install manually without renv, the dependency set is:
+
 ```r
 install.packages(c(
   "tidyverse", "lubridate", "fredr", "forecast",
-  "ggplot2", "readr", "broom", "here", "scales"
+  "ggplot2", "readr", "broom", "here", "scales", "testthat"
 ))
 ```
 
 `broom` is used by the pass-through stage to tidy `lm` coefficients into
-the same row-per-term schema as the ARIMA outputs.
+the same row-per-term schema as the ARIMA outputs. `testthat` is needed
+only for the unit-test suite.
 
 ### 2. Add a FRED API key
 
@@ -170,6 +184,29 @@ source(here::here("scripts", "05_generate_outputs.R"))
 
 This script sources stages 01–04 in order and then writes the final figures
 and tables. Each stage can also be run independently for debugging.
+
+### 4. Run the test suite
+
+```bash
+Rscript tests/testthat.R
+```
+
+Tests live under `tests/testthat/` and exercise the pure helpers in `R/`
+(frequency aggregation, derived-measure math, the pass-through regression
+on synthetic data with a known coefficient). Tests run on every push and
+PR via the [`R checks`](.github/workflows/r-checks.yml) CI workflow.
+
+### 5. Render the briefing memo
+
+```bash
+quarto render docs/briefing_template.qmd --to html
+```
+
+[`docs/briefing_template.qmd`](docs/briefing_template.qmd) reads the
+committed `outputs/tables/` and `outputs/figures/` and produces a one-page
+research-support memo summarizing the forecast targets and the cumulative
+pass-through coefficient. Treat the rendered memo as a **draft for human
+review** — the template explicitly does not draw policy conclusions.
 
 ## Key outputs
 

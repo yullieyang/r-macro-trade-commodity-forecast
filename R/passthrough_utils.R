@@ -75,7 +75,11 @@ prep_passthrough_panel <- function(df_wide,
 #'   `cumulative_passthrough`, and `n_obs`.
 fit_passthrough_lm <- function(panel, max_lag = 4L) {
 
-  fx_terms      <- c("dlog_fx", paste0("dlog_fx_lag", seq_len(max_lag)))
+  # paste0("x", integer(0)) recycles to "x" (a known R quirk), so guard the
+  # zero-lag case explicitly instead of relying on the paste0 to produce
+  # character(0).
+  fx_lag_terms  <- if (max_lag > 0L) paste0("dlog_fx_lag", seq_len(max_lag)) else character(0)
+  fx_terms      <- c("dlog_fx", fx_lag_terms)
   control_terms <- setdiff(grep("^dlog_", names(panel), value = TRUE),
                            c("dlog_price", fx_terms))
 

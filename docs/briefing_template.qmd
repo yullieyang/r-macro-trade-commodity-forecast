@@ -1,0 +1,179 @@
+---
+title: "Macro / Trade / Commodity Monitoring Brief"
+subtitle: "U.S. net exports, real GDP, WTI crude, and FX pass-through to trade prices"
+author: "Research-support pipeline `r-macro-trade-commodity-forecast`"
+date: today
+format:
+  html:
+    embed-resources: true
+    toc: false
+    page-layout: full
+  pdf:
+    documentclass: article
+    geometry:
+      - margin=0.9in
+    fontsize: 10pt
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+suppressPackageStartupMessages({
+  library(here)
+  library(readr)
+  library(dplyr)
+  library(scales)
+  library(knitr)
+})
+
+# Read the pipeline's published artifacts. The briefing reads the committed
+# outputs rather than re-running the pipeline, so the memo is reproducible
+# from whatever state `outputs/tables/` and `outputs/figures/` are in.
+fc   <- readr::read_csv(here::here("outputs", "tables", "forecast_results.csv"),
+                        show_col_types = FALSE)
+mod  <- readr::read_csv(here::here("outputs", "tables", "model_summary.csv"),
+                        show_col_types = FALSE)
+pt   <- readr::read_csv(here::here("outputs", "tables", "passthrough_coefficients.csv"),
+                        show_col_types = FALSE)
+
+# Helpers used in inline `r ...` calls.
+selected_model <- function(target_name) {
+  unique(mod$model[mod$target == target_name])[1]
+}
+first_fc <- function(target_name) {
+  fc |> dplyr::filter(target == target_name) |> dplyr::arrange(date) |> dplyr::slice(1)
+}
+last_fc <- function(target_name) {
+  fc |> dplyr::filter(target == target_name) |> dplyr::arrange(date) |> dplyr::slice(dplyr::n())
+}
+```
+
+## Headline
+
+This is a one-page briefing template. It is **not** an official forecast or a
+policy view. It is a draft research-support artifact rendered from the
+pipeline's committed outputs in `outputs/tables/` and `outputs/figures/`.
+A human reviewer must verify each claim against the source artifacts before
+this memo is shared.
+
+## Forecast summary
+
+The pipeline produces 8-quarter `auto.arima` forecasts for three targets:
+**net exports**, **real GDP**, and **WTI crude oil**. Models are selected
+per target by `forecast::auto.arima`; selection can change across runs and
+should be re-read each cycle from the panel below.
+
+```{r forecast-table}
+fc_tbl <- fc |>
+  dplyr::group_by(target) |>
+  dplyr::arrange(date, .by_group = TRUE) |>
+  dplyr::summarise(
+    horizon_start = min(date),
+    horizon_end   = max(date),
+    point_first   = dplyr::first(point),
+    point_last    = dplyr::last(point),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    model      = vapply(target, selected_model, character(1)),
+    point_first = round(point_first, 2),
+    point_last  = round(point_last, 2)
+  ) |>
+  dplyr::select(target, model, horizon_start, horizon_end, point_first, point_last)
+
+knitr::kable(
+  fc_tbl,
+  col.names = c("Target", "Selected model", "Horizon start",
+                "Horizon end", "First-period point", "Last-period point"),
+  caption = "Point forecasts at the first and last quarters of the 8-quarter horizon."
+)
+```
+
+::: {.callout-note appearance="simple"}
+**Reading note.** `auto.arima` selects different specifications for each
+target. A flat forecast (e.g. `ARIMA(0,1,0)`) means the model collapsed to a
+random walk — a deliberate baseline, not a bug. Prediction intervals widen
+as the horizon extends and are reported in `outputs/tables/forecast_results.csv`.
+:::
+
+## Forecast charts
+
+::: {layout-ncol=3}
+![Net exports](../outputs/figures/04_forecast_net_exports.png)
+
+![Real GDP](../outputs/figures/05_forecast_real_gdp.png)
+
+![WTI crude oil](../outputs/figures/07_forecast_oil_wti.png)
+:::
+
+## Exchange-rate pass-through to U.S. trade prices
+
+The pipeline estimates a distributed-lag regression of Δlog(import deflator)
+on Δlog(broad trade-weighted dollar) with 0–4 quarter lags and a CPI control.
+The headline statistic is the **cumulative pass-through**: the sum of FX
+coefficients across lags. The table below reports the latest estimate.
+
+```{r pt-summary}
+pt_summary <- pt |>
+  dplyr::distinct(target, cumulative_passthrough, n_obs) |>
+  dplyr::mutate(cumulative_passthrough = round(cumulative_passthrough, 3))
+
+knitr::kable(
+  pt_summary,
+  col.names = c("Target deflator", "Cumulative pass-through", "Observations"),
+  caption = "Cumulative pass-through coefficient (sum of FX coefficients across lags 0–4)."
+)
+```
+
+![Δlog(USD index) vs. Δlog(U.S. import deflator)](../outputs/figures/06_fx_vs_import_deflator.png){width=70%}
+
+::: {.callout-note appearance="simple"}
+**Interpretation note.** Pass-through estimates describe an empirical
+association between dollar movements and trade prices over the sample window.
+They are not a causal decomposition. A negative coefficient on Δlog(USD)
+indicates that a dollar appreciation is associated with falling U.S. import
+prices in dollar terms, consistent with the standard producer-currency
+pricing prior.
+:::
+
+## Macro / trade / commodity overview
+
+The chart below shows the cleaned quarterly panel used by both the forecast
+and pass-through stages.
+
+![Quarterly panel — selected indicators](../outputs/figures/01_macro_trade_overview.png)
+
+## Data, methodology, and review
+
+- **Data.** All series are sourced from FRED via `fredr`. See
+  [`README.md`](../README.md) for the full series list and
+  [`docs/data_dictionary.md`](data_dictionary.md) for variable definitions.
+- **Methodology.** See [`docs/methodology.md`](methodology.md) for the
+  alignment rules, derived measures, model selection, and pass-through
+  specification.
+- **Research themes.** See [`docs/research_themes.md`](research_themes.md)
+  for the questions this pipeline is designed to address.
+- **Limitations.** ARIMA is a univariate baseline; the pass-through model is
+  reduced-form and not a causal decomposition; quarterly aggregation
+  discards intra-quarter variation in daily series (oil, FX, policy rate);
+  the pipeline does not handle structural breaks (e.g., the 2020 shock)
+  explicitly.
+
+## How to render
+
+```bash
+# From the repository root:
+quarto render docs/briefing_template.qmd --to html   # one-page HTML memo
+quarto render docs/briefing_template.qmd --to pdf    # printable PDF (requires LaTeX)
+```
+
+The rendered output lands next to the `.qmd` file unless `--output-dir` is
+passed. The briefing reads the committed `outputs/tables/` and
+`outputs/figures/`; to refresh those, run
+`source(here::here("scripts", "05_generate_outputs.R"))` first.
+
+---
+
+*Draft for human review. Not an official forecast or policy view.*
