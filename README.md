@@ -257,12 +257,45 @@ slice of the regression.
 - Replace the single-equation ARIMA with a small VAR over oil, trade, and
   GDP, with impulse-response diagnostics.
 - Add a `renv.lock` for fully reproducible package versions.
-- Wire the pipeline into a GitHub Actions workflow that refreshes data on a
-  monthly cron and publishes the figures as build artifacts.
+- Extend the existing CI to refresh FRED data on a monthly cron and publish
+  the figures as build artifacts (the parse + lintr CI is already in place).
 - Add an R Markdown / Quarto briefing template that renders the figures and
   tables into a one-page memo.
-- Add unit tests for the transform helpers (`testthat`) and lint with
-  `lintr` / `styler` in CI.
+- Add `testthat` unit tests for the transform and pass-through helpers.
+
+## Skills demonstrated
+
+- **R for research-support workflows** — modular helper layer in `R/`,
+  numbered pipeline stages, `here::here()` path discipline, deterministic
+  artifact paths under `data/processed/` and `outputs/`.
+- **Time-series forecasting** — `forecast::auto.arima` with 80% / 95%
+  prediction intervals; targets with structurally different selected models
+  (`ARIMA(0,1,0)` for net exports vs. `ARIMA(0,1,1)+drift` for real GDP)
+  handled by a single configurable loop.
+- **Empirical trade economics** — distributed-lag exchange-rate pass-through
+  regression with a CPI control; tidied to the same row-per-term schema as
+  the ARIMA outputs.
+- **Frequency alignment** — daily, monthly, and quarterly series harmonized
+  to a quarterly panel via period-average aggregation, with the rule
+  documented in `docs/methodology.md`.
+- **Reproducibility and review** — Git-tracked outputs, single-command
+  pipeline, FRED API key isolated to a git-ignored `.Renviron`, CI on push.
+- **Documentation discipline** — methodology, data dictionary, and explicit
+  research-themes write-up live in `docs/`.
+
+## Connects to research-support workflows
+
+This repository is structured the way a recurring research-support workflow
+would be packaged in a policy or financial-research setting: a numbered
+pipeline with one parameter file for the series list, derived measures
+documented next to their construction, model output tidied into a stable
+schema, and every artifact regenerable by one command and reviewable through
+Git. The point is not the specific model — `auto.arima` is a baseline — but
+that the workflow around it is auditable, parameterized, and easy to extend.
+
+For an AI-assisted-review companion to this pipeline (prompt templates,
+QC report scaffolding, human-in-the-loop checklists), see
+[llm-research-workflow-assistant](https://github.com/yullieyang/llm-research-workflow-assistant).
 
 ## Development & AI workflow
 
